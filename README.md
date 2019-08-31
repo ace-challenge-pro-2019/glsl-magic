@@ -1,6 +1,12 @@
 # glsl-magic
 GLSLで魔法使いになりたい！
 
+## GLSL リファレンス
+
+バージョンはこれで良いのか？？
+
+https://www.khronos.org/registry/OpenGL-Refpages/gl4/
+
 ## SandBox
 
 http://glslsandbox.com/e
@@ -91,3 +97,41 @@ void main( void ) {
 
 }
 ```
+
+http://glslsandbox.com/e#57059.0
+無機質な模様？
+
+```
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+#extension GL_OES_standard_derivatives : enable
+
+uniform float time;
+uniform vec2 mouse;
+uniform vec2 resolution;
+
+void main( void ) {
+
+	vec2 position = ( gl_FragCoord.xy / resolution.xy );
+	float centered_coord = length(position - vec2(0.5));
+
+			float u = 8.0 / centered_coord + 16.0 * time/2.;
+			float v = atan(position.y - 0.5, position.x - 0.5) * 16.0;
+	 
+			float fade = centered_coord / 4.;
+			float gradient = (sin(u) + sin(v))*fade;
+
+	gl_FragColor = vec4( vec3(gradient*4.), 1.0 );
+
+}
+```
+
+とりあえず箱を回してみた→ rotate_box.frag
+
+## カラフルなサンプル発見
+
+https://www.shadertoy.com/view/4lGcz1 -> rainbow.frag
+
+https://www.shadertoy.com/view/MdfBRX -> rainglass.frag
