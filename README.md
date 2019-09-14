@@ -135,3 +135,27 @@ void main( void ) {
 https://www.shadertoy.com/view/4lGcz1 -> rainbow.frag
 
 https://www.shadertoy.com/view/MdfBRX -> rainglass.frag
+
+## 大体の仕組み
+
+
+https://thebookofshaders.com/03/?lan=jp
+
+uniform 宣言されている変数はCPUからGPUに渡される変数。各スレッドに均一に渡される変数のため、'uniform' と呼ばれている。
+
+http://glslsandbox.com/e のサイトでは、経過時間、マウス位置、解像度(画面サイズ)が`float time`、`vec2 mouse`、`vec2 resolution`の３つに渡されてくる。
+この変数名はCPU側の実装に依存している。(実行する処理系によって変わる。)
+
+`vec4 gl_FragCoord`などのgl_*で提供される"変数"はGPUのスレッドごとに変わる(グローバルっぽい？)変数で、引数や戻り値として使用される。=varying変数と呼ばれるらしい。
+
+```
+vec2 st = gl_FragCoord.xy/u_resolution;
+```
+
+ってよくやるけど、どう言うこと？？
+
+> フラグメントの座標を描画領域全体のサイズで割ることによって正規化しています。こうすると座標値の範囲が 0.0 から 1.0 の間に収まるため、簡単にx座標とy座標の値をr（赤）とg（緑）のチャンネルに対応させることができます。
+
+http://glslsandbox.com/e#57426.0 のサンプルでは `varying vec2 surfacePosition;` も使っている。パンニングができるみたい。
+
+ここの制御はどうなってるんだろう・・・？
